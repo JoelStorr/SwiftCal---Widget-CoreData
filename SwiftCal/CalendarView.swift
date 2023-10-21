@@ -8,7 +8,7 @@
 import SwiftUI
 import CoreData
 
-struct ContentView: View {
+struct CalendarView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @FetchRequest(
@@ -53,5 +53,5 @@ struct ContentView: View {
 
 
 #Preview {
-    ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    CalendarView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }
