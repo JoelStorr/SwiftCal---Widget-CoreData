@@ -52,7 +52,7 @@ extension Date {
     
     
     var startOfCalanderWithPrefixDays: Date{
-        let startOfMonthWeekDay = Calendar.current.component(.weekday, from: self.startOfMonth)
+        let startOfMonthWeekDay = Calendar.current.component(.weekday, from: startOfMonth)
         let numberOfPrefixDays = startOfMonthWeekDay - 1
         let startDate = Calendar.current.date(byAdding: .day, value: -numberOfPrefixDays, to: startOfMonth)!
         return startDate
