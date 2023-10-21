@@ -13,7 +13,11 @@ struct CalendarView: View {
 
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Day.date, ascending: true)],
-        animation: .default)
+        predicate: NSPredicate(
+            format: "(date >= %@) AND (date <= %@)",
+            Date().startOfCalanderWithPrefixDays as CVarArg,
+            Date().endOfDay as CVarArg
+        ))
     private var days: FetchedResults<Day>
 
     
@@ -32,14 +36,21 @@ struct CalendarView: View {
                 }
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), content: {
                     ForEach(days){ day in
-                        Text(day.date!.formatted(.dateTime.day()))
-                            .fontWeight(.bold)
-                            .foregroundStyle(day.didStudy ? .orange : .secondary)
-                            .frame(maxWidth: .infinity, minHeight: 40)
-                            .background(
-                                Circle()
-                                    .foregroundStyle(.orange.opacity( day.didStudy ? 0.3 : 0))
-                            )
+                        
+                        if day.date!.monthInt != Date().monthInt{
+                          Text(" ")
+                        }else {
+                            Text(day.date!.formatted(.dateTime.day()))
+                                .fontWeight(.bold)
+                                .foregroundStyle(day.didStudy ? .orange : .secondary)
+                                .frame(maxWidth: .infinity, minHeight: 40)
+                                .background(
+                                    Circle()
+                                        .foregroundStyle(.orange.opacity( day.didStudy ? 0.3 : 0))
+                                )                            
+                        }
+                        
+                        
                     }
                     
                 })
@@ -47,8 +58,35 @@ struct CalendarView: View {
             }
             .navigationTitle(Date().formatted(.dateTime.month(.wide)))
             .padding()
+            .onAppear{
+                if days.isEmpty{
+                    createMonthDays(for: .now.startOfPreviousMonth)
+                    createMonthDays(for: .now)
+                } else if days.count < 10 {
+                    createMonthDays(for: .now)
+                }
+            }
         }
     }
+    
+    
+    func createMonthDays(for date: Date){
+        for daysOffset in 0..<date.numberOfDaysInMonth{
+            let newDay = Day(context: viewContext)
+            newDay.date = Calendar.current.date(byAdding: .day, value: daysOffset, to: date.startOfMonth)
+            newDay.didStudy = false
+        }
+        
+        do{
+            try viewContext.save()
+            print("✅ \(date.monthFullName) days Created")
+            
+        }catch{
+            print("Faild to save")
+        }
+        
+    }
+    
 }
 
 
