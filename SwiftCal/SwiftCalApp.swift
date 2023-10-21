@@ -21,7 +21,6 @@ struct SwiftCalApp: App {
                     .tabItem { Label("Streak", systemImage: "swift") }
             }
             .environment(\.managedObjectContext, persistenceController.container.viewContext)
-            
         }
     }
 }
