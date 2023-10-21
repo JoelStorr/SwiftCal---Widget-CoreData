@@ -85,14 +85,11 @@ struct CalendarView: View {
             let newDay = Day(context: viewContext)
             newDay.date = Calendar.current.date(byAdding: .day, value: daysOffset, to: date.startOfMonth)
             newDay.didStudy = false
-            
-            print(newDay.date)
         }
         
         do{
             try viewContext.save()
             print("✅ \(date.monthFullName) days Created")
-            print(days)
             
         }catch{
             print("Faild to save")
