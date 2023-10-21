@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4038AEE02AE3EE750018C918 /* date+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4038AEDF2AE3EE750018C918 /* date+ext.swift */; };
+		4038AEE32AE4134B0018C918 /* StreakView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4038AEE22AE4134A0018C918 /* StreakView.swift */; };
 		407953C62AE2A81600492017 /* SwiftCalApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407953C52AE2A81600492017 /* SwiftCalApp.swift */; };
 		407953C82AE2A81600492017 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407953C72AE2A81600492017 /* CalendarView.swift */; };
 		407953CA2AE2A81800492017 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 407953C92AE2A81800492017 /* Assets.xcassets */; };
@@ -18,6 +19,7 @@
 
 /* Begin PBXFileReference section */
 		4038AEDF2AE3EE750018C918 /* date+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "date+ext.swift"; sourceTree = "<group>"; };
+		4038AEE22AE4134A0018C918 /* StreakView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakView.swift; sourceTree = "<group>"; };
 		407953C22AE2A81600492017 /* SwiftCal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftCal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		407953C52AE2A81600492017 /* SwiftCalApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftCalApp.swift; sourceTree = "<group>"; };
 		407953C72AE2A81600492017 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
@@ -72,6 +74,7 @@
 				407953CE2AE2A81800492017 /* Persistence.swift */,
 				407953D02AE2A81800492017 /* SwiftCal.xcdatamodeld */,
 				407953CB2AE2A81800492017 /* Preview Content */,
+				4038AEE22AE4134A0018C918 /* StreakView.swift */,
 			);
 			path = SwiftCal;
 			sourceTree = "<group>";
@@ -154,6 +157,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4038AEE32AE4134B0018C918 /* StreakView.swift in Sources */,
 				407953CF2AE2A81800492017 /* Persistence.swift in Sources */,
 				407953C82AE2A81600492017 /* CalendarView.swift in Sources */,
 				407953D22AE2A81800492017 /* SwiftCal.xcdatamodeld in Sources */,
