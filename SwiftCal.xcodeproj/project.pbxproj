@@ -15,6 +15,8 @@
 		4038AEF22AE419B50018C918 /* SwiftCalWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4038AEF12AE419B50018C918 /* SwiftCalWidget.swift */; };
 		4038AEF42AE419B80018C918 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4038AEF32AE419B80018C918 /* Assets.xcassets */; };
 		4038AEF82AE419B80018C918 /* SwiftCalWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 4038AEE82AE419B40018C918 /* SwiftCalWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4038AF002AE451C10018C918 /* CalendarHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4038AEFF2AE451C10018C918 /* CalendarHeaderView.swift */; };
+		4038AF012AE451C10018C918 /* CalendarHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4038AEFF2AE451C10018C918 /* CalendarHeaderView.swift */; };
 		407953C62AE2A81600492017 /* SwiftCalApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407953C52AE2A81600492017 /* SwiftCalApp.swift */; };
 		407953C82AE2A81600492017 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407953C72AE2A81600492017 /* CalendarView.swift */; };
 		407953CA2AE2A81800492017 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 407953C92AE2A81800492017 /* Assets.xcassets */; };
@@ -59,6 +61,7 @@
 		4038AEF52AE419B80018C918 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4038AEFD2AE41B1F0018C918 /* SwiftCal.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftCal.entitlements; sourceTree = "<group>"; };
 		4038AEFE2AE41C660018C918 /* SwiftCalWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftCalWidgetExtension.entitlements; sourceTree = "<group>"; };
+		4038AEFF2AE451C10018C918 /* CalendarHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarHeaderView.swift; sourceTree = "<group>"; };
 		407953C22AE2A81600492017 /* SwiftCal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftCal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		407953C52AE2A81600492017 /* SwiftCalApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftCalApp.swift; sourceTree = "<group>"; };
 		407953C72AE2A81600492017 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
@@ -148,6 +151,7 @@
 				407953D02AE2A81800492017 /* SwiftCal.xcdatamodeld */,
 				407953CB2AE2A81800492017 /* Preview Content */,
 				4038AEE22AE4134A0018C918 /* StreakView.swift */,
+				4038AEFF2AE451C10018C918 /* CalendarHeaderView.swift */,
 			);
 			path = SwiftCal;
 			sourceTree = "<group>";
@@ -263,6 +267,7 @@
 			files = (
 				4038AEF22AE419B50018C918 /* SwiftCalWidget.swift in Sources */,
 				4038AEF02AE419B40018C918 /* SwiftCalWidgetBundle.swift in Sources */,
+				4038AF012AE451C10018C918 /* CalendarHeaderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -271,6 +276,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4038AEE32AE4134B0018C918 /* StreakView.swift in Sources */,
+				4038AF002AE451C10018C918 /* CalendarHeaderView.swift in Sources */,
 				407953CF2AE2A81800492017 /* Persistence.swift in Sources */,
 				407953C82AE2A81600492017 /* CalendarView.swift in Sources */,
 				407953D22AE2A81800492017 /* SwiftCal.xcdatamodeld in Sources */,

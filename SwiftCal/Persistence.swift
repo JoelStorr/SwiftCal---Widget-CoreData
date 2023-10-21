@@ -100,5 +100,4 @@ struct PersistenceController {
             print("⭕️ Unable to delete old store")
         }
     }
-    
 }

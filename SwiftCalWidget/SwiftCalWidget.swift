@@ -41,15 +41,41 @@ struct SimpleEntry: TimelineEntry {
 
 struct SwiftCalWidgetEntryView : View {
     var entry: Provider.Entry
+    let columns = Array(repeating: GridItem(.flexible()), count: 7)
 
     var body: some View {
-        VStack {
-            Text("Time:")
-            Text(entry.date, style: .time)
-
-            Text("Emoji:")
-            Text(entry.emoji)
+        HStack{
+            VStack{
+                Text("30")
+                    .font(.system(size: 70, design: .rounded))
+                    .bold()
+                    .foregroundStyle(.orange)
+                Text("day streak")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            VStack{
+                CalendarHeaderView(font: .caption)
+                
+                LazyVGrid(columns: columns, spacing: 7) {
+                    ForEach(0..<31){ _ in
+                            Text("30")
+                            .font(.caption2)
+                            .bold()
+                            .frame(maxWidth: .infinity)
+                            .foregroundStyle(.secondary)
+                            .background(
+                                Circle()
+                                    .foregroundStyle(.orange.opacity(0.3))
+                                    .scaleEffect(1.5)
+                            )
+                    }
+                }
+                    
+            }
+            .padding(.leading)
         }
+        .padding()
     }
 }
 
@@ -69,10 +95,11 @@ struct SwiftCalWidget: Widget {
         }
         .configurationDisplayName("My Widget")
         .description("This is an example widget.")
+        .supportedFamilies([.systemMedium])
     }
 }
 
-#Preview(as: .systemSmall) {
+#Preview(as: .systemMedium) {
     SwiftCalWidget()
 } timeline: {
     SimpleEntry(date: .now, emoji: "😀")
