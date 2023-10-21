@@ -7,46 +7,72 @@
 
 import WidgetKit
 import SwiftUI
+import CoreData
 
 struct Provider: TimelineProvider {
-    func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), emoji: "😀")
+    
+    let viewContext = PersistenceController.shared.container.viewContext
+    
+    var dayFetchRequest: NSFetchRequest<Day> {
+        //Created the request
+         let request = Day.fetchRequest()
+         request.sortDescriptors = [NSSortDescriptor(keyPath: \Day.date, ascending: true)]
+         request.predicate = NSPredicate(
+             format: "(date >= %@) AND (date <= %@)",
+             Date().startOfCalanderWithPrefixDays as CVarArg,
+             Date().endOfMonth as CVarArg
+         )
+         
+        return request
+    }
+    
+    
+    func placeholder(in context: Context) -> CalendarEntry {
+        CalendarEntry(date: Date(), days: [])
     }
 
-    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = SimpleEntry(date: Date(), emoji: "😀")
+    func getSnapshot(in context: Context, completion: @escaping (CalendarEntry) -> ()) {
+       
+        do{
+            let days = try viewContext.fetch(dayFetchRequest)
+            let entry = CalendarEntry(date: Date(), days: days)
+            completion(entry)
+            
+        } catch {
+          print("Widget failed to fetch days in snapshot")
+        }
+        
+        let entry = CalendarEntry(date: Date(), days: [] )
         completion(entry)
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        var entries: [SimpleEntry] = []
-
-        // Generate a timeline consisting of five entries an hour apart, starting from the current date.
-        let currentDate = Date()
-        for hourOffset in 0 ..< 5 {
-            let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate, emoji: "😀")
-            entries.append(entry)
+        
+        do{
+            let days = try viewContext.fetch(dayFetchRequest)
+            let entry = CalendarEntry(date: Date(), days: days)
+            let timeline = Timeline(entries: [entry], policy: .after(.now.endOfDay))
+            completion(timeline)
+            
+        } catch {
+          print("Widget failed to fetch days in snapshot")
         }
-
-        let timeline = Timeline(entries: entries, policy: .atEnd)
-        completion(timeline)
     }
 }
 
-struct SimpleEntry: TimelineEntry {
+struct CalendarEntry: TimelineEntry {
     let date: Date
-    let emoji: String
+    let days : [Day]
 }
 
 struct SwiftCalWidgetEntryView : View {
-    var entry: Provider.Entry
+    var entry: CalendarEntry
     let columns = Array(repeating: GridItem(.flexible()), count: 7)
 
     var body: some View {
         HStack{
             VStack{
-                Text("30")
+                Text("\(calculateStreakValue())")
                     .font(.system(size: 70, design: .rounded))
                     .bold()
                     .foregroundStyle(.orange)
@@ -58,17 +84,22 @@ struct SwiftCalWidgetEntryView : View {
                 CalendarHeaderView(font: .caption)
                 
                 LazyVGrid(columns: columns, spacing: 7) {
-                    ForEach(0..<31){ _ in
-                            Text("30")
-                            .font(.caption2)
-                            .bold()
-                            .frame(maxWidth: .infinity)
-                            .foregroundStyle(.secondary)
-                            .background(
-                                Circle()
-                                    .foregroundStyle(.orange.opacity(0.3))
-                                    .scaleEffect(1.5)
-                            )
+                    ForEach(entry.days){ day in
+                        if day.date!.monthInt != Date().monthInt {
+                            Text(" ")
+                        } else {
+                            Text(day.date!.formatted(.dateTime.day()))
+                                .font(.caption2)
+                                .bold()
+                                .frame(maxWidth: .infinity)
+                                .foregroundStyle( day.didStudy ? .orange : .secondary)
+                                .background(
+                                    Circle()
+                                        .foregroundStyle(.orange.opacity(day.didStudy ? 0.3 : 0.0))
+                                        .scaleEffect(1.5)
+                                )
+                        }
+                        
                     }
                 }
                     
@@ -77,6 +108,27 @@ struct SwiftCalWidgetEntryView : View {
         }
         .padding()
     }
+    
+    func calculateStreakValue() -> Int{
+        guard !entry.days.isEmpty else { return 0 }
+        
+        let noneFutureDays = entry.days.filter{ $0.date!.dayInt <= Date().dayInt }
+        
+        var streakCount = 0
+        
+        for day in noneFutureDays.reversed() {
+            if day.didStudy{
+                streakCount += 1
+            }else{
+                if day.date!.dayInt != Date().dayInt{
+                    break
+                }
+            }
+        }
+        return streakCount
+    }
+    
+    
 }
 
 struct SwiftCalWidget: Widget {
@@ -93,8 +145,8 @@ struct SwiftCalWidget: Widget {
                     .background()
             }
         }
-        .configurationDisplayName("My Widget")
-        .description("This is an example widget.")
+        .configurationDisplayName("Swift Strudy Calander")
+        .description("Track Days you study swift with streak")
         .supportedFamilies([.systemMedium])
     }
 }
@@ -102,6 +154,6 @@ struct SwiftCalWidget: Widget {
 #Preview(as: .systemMedium) {
     SwiftCalWidget()
 } timeline: {
-    SimpleEntry(date: .now, emoji: "😀")
-    SimpleEntry(date: .now, emoji: "🤩")
+    CalendarEntry(date: .now, days: [] )
+    CalendarEntry(date: .now, days: [] )
 }

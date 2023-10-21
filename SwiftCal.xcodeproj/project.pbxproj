@@ -17,6 +17,9 @@
 		4038AEF82AE419B80018C918 /* SwiftCalWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 4038AEE82AE419B40018C918 /* SwiftCalWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4038AF002AE451C10018C918 /* CalendarHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4038AEFF2AE451C10018C918 /* CalendarHeaderView.swift */; };
 		4038AF012AE451C10018C918 /* CalendarHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4038AEFF2AE451C10018C918 /* CalendarHeaderView.swift */; };
+		4038AF022AE455750018C918 /* SwiftCal.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 407953D02AE2A81800492017 /* SwiftCal.xcdatamodeld */; };
+		4038AF032AE456DB0018C918 /* date+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4038AEDF2AE3EE750018C918 /* date+ext.swift */; };
+		4038AF042AE4586A0018C918 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407953CE2AE2A81800492017 /* Persistence.swift */; };
 		407953C62AE2A81600492017 /* SwiftCalApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407953C52AE2A81600492017 /* SwiftCalApp.swift */; };
 		407953C82AE2A81600492017 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407953C72AE2A81600492017 /* CalendarView.swift */; };
 		407953CA2AE2A81800492017 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 407953C92AE2A81800492017 /* Assets.xcassets */; };
@@ -267,7 +270,10 @@
 			files = (
 				4038AEF22AE419B50018C918 /* SwiftCalWidget.swift in Sources */,
 				4038AEF02AE419B40018C918 /* SwiftCalWidgetBundle.swift in Sources */,
+				4038AF022AE455750018C918 /* SwiftCal.xcdatamodeld in Sources */,
+				4038AF042AE4586A0018C918 /* Persistence.swift in Sources */,
 				4038AF012AE451C10018C918 /* CalendarHeaderView.swift in Sources */,
+				4038AF032AE456DB0018C918 /* date+ext.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,7 +315,7 @@
 				INFOPLIST_FILE = SwiftCalWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SwiftCalWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -338,7 +344,7 @@
 				INFOPLIST_FILE = SwiftCalWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SwiftCalWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
