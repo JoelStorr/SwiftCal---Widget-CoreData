@@ -66,51 +66,31 @@ struct CalendarEntry: TimelineEntry {
 }
 
 struct SwiftCalWidgetEntryView : View {
+    @Environment(\.widgetFamily) var family
     var entry: CalendarEntry
-    let columns = Array(repeating: GridItem(.flexible()), count: 7)
-
+   
     var body: some View {
-        HStack{
-            Link(destination: URL(string: "streak")!){
-                VStack{
-                    Text("\(calculateStreakValue())")
-                        .font(.system(size: 70, design: .rounded))
-                        .bold()
-                        .foregroundStyle(.orange)
-                    Text("day streak")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
-            Link(destination: URL(string: "calendar")!){
-                VStack{
-                    CalendarHeaderView(font: .caption)
-                    
-                    LazyVGrid(columns: columns, spacing: 7) {
-                        ForEach(entry.days){ day in
-                            if day.date!.monthInt != Date().monthInt {
-                                Text(" ")
-                            } else {
-                                Text(day.date!.formatted(.dateTime.day()))
-                                    .font(.caption2)
-                                    .bold()
-                                    .frame(maxWidth: .infinity)
-                                    .foregroundStyle( day.didStudy ? .orange : .secondary)
-                                    .background(
-                                        Circle()
-                                            .foregroundStyle(.orange.opacity(day.didStudy ? 0.3 : 0.0))
-                                            .scaleEffect(1.5)
-                                    )
-                            }
-                            
-                        }
-                    }
-                    
-                }
-            }
-            .padding(.leading)
+        
+        
+        switch family{
+        case .systemMedium:
+            MediumCalendarView(entry: entry, streakValue: calculateStreakValue())
+        case .accessoryCircular:
+            LockscreenCircularView(entry: entry)
+        case .accessoryRectangular:
+            LockScreenRectangularView(entry: entry)
+        case .accessoryInline:
+            Label("Streak - \(calculateStreakValue()) days", systemImage: "swift")
+                .widgetURL(URL(string:"streak"))
+        case .systemSmall, .systemLarge, .systemExtraLarge:
+            EmptyView()
+        @unknown default:
+            EmptyView()
         }
-        .padding()
+        
+        
+        
+        
     }
     
     func calculateStreakValue() -> Int{
@@ -151,13 +131,126 @@ struct SwiftCalWidget: Widget {
         }
         .configurationDisplayName("Swift Strudy Calander")
         .description("Track Days you study swift with streak")
-        .supportedFamilies([.systemMedium])
+        .supportedFamilies([.systemMedium, .accessoryInline, .accessoryCircular, .accessoryRectangular])
     }
 }
 
-#Preview(as: .systemMedium) {
+#Preview(as: .accessoryInline) {
     SwiftCalWidget()
 } timeline: {
     CalendarEntry(date: .now, days: [] )
     CalendarEntry(date: .now, days: [] )
+}
+
+
+
+//MARK: UI Components for different sizes
+
+
+private struct MediumCalendarView : View {
+    var entry : CalendarEntry
+    let columns = Array(repeating: GridItem(.flexible()), count: 7)
+    var streakValue: Int
+    
+    var body: some View {
+        HStack{
+            Link(destination: URL(string: "streak")!){
+                VStack{
+                    Text("\(streakValue)")
+                        .font(.system(size: 70, design: .rounded))
+                        .bold()
+                        .foregroundStyle(.orange)
+                    Text("day streak")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            Link(destination: URL(string: "calendar")!){
+                VStack{
+                    CalendarHeaderView(font: .caption)
+                    
+                    LazyVGrid(columns: columns, spacing: 7) {
+                        ForEach(entry.days){ day in
+                            if day.date!.monthInt != Date().monthInt {
+                                Text(" ")
+                            } else {
+                                Text(day.date!.formatted(.dateTime.day()))
+                                    .font(.caption2)
+                                    .bold()
+                                    .frame(maxWidth: .infinity)
+                                    .foregroundStyle( day.didStudy ? .orange : .secondary)
+                                    .background(
+                                        Circle()
+                                            .foregroundStyle(.orange.opacity(day.didStudy ? 0.3 : 0.0))
+                                            .scaleEffect(1.5)
+                                    )
+                            }
+                            
+                        }
+                    }
+                    
+                }
+            }
+            .padding(.leading)
+        }
+        .padding()
+    }
+}
+
+
+private struct LockscreenCircularView: View {
+    var entry: CalendarEntry
+    
+    var currentCalanderDays: Int{
+        entry.days.filter{$0.date?.monthInt == Date().monthInt}.count
+    }
+    
+    
+    var daysStudied: Int{
+        entry.days.filter{$0.date?.monthInt == Date().monthInt}
+            .filter{$0.didStudy}.count
+    }
+    
+    var body: some View {
+        Gauge(
+            value: Double(daysStudied),
+            in: 1...Double(currentCalanderDays)){
+                Image(systemName: "swift")
+            } currentValueLabel: {
+                Text("\(daysStudied)")
+            }
+            .gaugeStyle(.accessoryCircular)
+        
+    }
+}
+
+
+private struct LockScreenRectangularView : View {
+    var entry : CalendarEntry
+    let columns = Array(repeating: GridItem(.flexible()), count: 7)
+    
+    
+    var body: some View {
+        LazyVGrid(columns: columns, spacing: 4) {
+            ForEach(entry.days){ day in
+                if day.date!.monthInt != Date().monthInt {
+                    Text(" ")
+                        .font(.system(size: 7))
+                } else {
+                    if(day.didStudy){
+                        Image(systemName: "swift")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 7, height: 7)
+                    }else{
+                        Text(day.date!.formatted(.dateTime.day()))
+                            .font(.system(size: 7))
+                            .frame(maxWidth: .infinity)
+                    }
+                }
+                
+            }
+        }
+        .padding()
+    }
 }
