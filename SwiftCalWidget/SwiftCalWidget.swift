@@ -22,7 +22,6 @@ struct Provider: TimelineProvider {
              Date().startOfCalanderWithPrefixDays as CVarArg,
              Date().endOfMonth as CVarArg
          )
-         
         return request
     }
     
@@ -31,6 +30,7 @@ struct Provider: TimelineProvider {
         CalendarEntry(date: Date(), days: [])
     }
 
+    
     func getSnapshot(in context: Context, completion: @escaping (CalendarEntry) -> ()) {
        
         do{
@@ -46,6 +46,7 @@ struct Provider: TimelineProvider {
         completion(entry)
     }
 
+    
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
         
         do{
@@ -60,6 +61,7 @@ struct Provider: TimelineProvider {
     }
 }
 
+
 struct CalendarEntry: TimelineEntry {
     let date: Date
     let days : [Day]
@@ -70,8 +72,6 @@ struct SwiftCalWidgetEntryView : View {
     var entry: CalendarEntry
    
     var body: some View {
-        
-        
         switch family{
         case .systemMedium:
             MediumCalendarView(entry: entry, streakValue: calculateStreakValue())
@@ -87,11 +87,8 @@ struct SwiftCalWidgetEntryView : View {
         @unknown default:
             EmptyView()
         }
-        
-        
-        
-        
     }
+    
     
     func calculateStreakValue() -> Int{
         guard !entry.days.isEmpty else { return 0 }
@@ -111,8 +108,6 @@ struct SwiftCalWidgetEntryView : View {
         }
         return streakCount
     }
-    
-    
 }
 
 struct SwiftCalWidget: Widget {
@@ -145,7 +140,6 @@ struct SwiftCalWidget: Widget {
 
 
 //MARK: UI Components for different sizes
-
 
 private struct MediumCalendarView : View {
     var entry : CalendarEntry
@@ -185,7 +179,6 @@ private struct MediumCalendarView : View {
                                             .scaleEffect(1.5)
                                     )
                             }
-                            
                         }
                     }
                     
@@ -220,7 +213,6 @@ private struct LockscreenCircularView: View {
                 Text("\(daysStudied)")
             }
             .gaugeStyle(.accessoryCircular)
-        
     }
 }
 
@@ -228,7 +220,6 @@ private struct LockscreenCircularView: View {
 private struct LockScreenRectangularView : View {
     var entry : CalendarEntry
     let columns = Array(repeating: GridItem(.flexible()), count: 7)
-    
     
     var body: some View {
         LazyVGrid(columns: columns, spacing: 4) {
