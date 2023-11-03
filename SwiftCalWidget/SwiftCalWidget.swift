@@ -10,11 +10,11 @@ import SwiftUI
 import CoreData
 
 struct Provider: TimelineProvider {
-    
+
     let viewContext = PersistenceController.shared.container.viewContext
-    
+
     var dayFetchRequest: NSFetchRequest<Day> {
-        //Created the request
+        // Created the request
          let request = Day.fetchRequest()
          request.sortDescriptors = [NSSortDescriptor(keyPath: \Day.date, ascending: true)]
          request.predicate = NSPredicate(
@@ -24,55 +24,49 @@ struct Provider: TimelineProvider {
          )
         return request
     }
-    
-    
+
     func placeholder(in context: Context) -> CalendarEntry {
         CalendarEntry(date: Date(), days: [])
     }
 
-    
-    func getSnapshot(in context: Context, completion: @escaping (CalendarEntry) -> ()) {
-       
-        do{
+    func getSnapshot(in context: Context, completion: @escaping (CalendarEntry) -> Void) {
+
+        do {
             let days = try viewContext.fetch(dayFetchRequest)
             let entry = CalendarEntry(date: Date(), days: days)
             completion(entry)
-            
+
         } catch {
           print("Widget failed to fetch days in snapshot")
         }
-        
+
         let entry = CalendarEntry(date: Date(), days: [] )
         completion(entry)
     }
 
-    
-    func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        
-        do{
+    func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> Void) {
+        do {
             let days = try viewContext.fetch(dayFetchRequest)
             let entry = CalendarEntry(date: Date(), days: days)
             let timeline = Timeline(entries: [entry], policy: .after(.now.endOfDay))
             completion(timeline)
-            
         } catch {
           print("Widget failed to fetch days in snapshot")
         }
     }
 }
 
-
 struct CalendarEntry: TimelineEntry {
     let date: Date
-    let days : [Day]
+    let days: [Day]
 }
 
-struct SwiftCalWidgetEntryView : View {
+struct SwiftCalWidgetEntryView: View {
     @Environment(\.widgetFamily) var family
     var entry: CalendarEntry
-   
+
     var body: some View {
-        switch family{
+        switch family {
         case .systemMedium:
             MediumCalendarView(entry: entry, streakValue: calculateStreakValue())
         case .accessoryCircular:
@@ -81,27 +75,26 @@ struct SwiftCalWidgetEntryView : View {
             LockScreenRectangularView(entry: entry)
         case .accessoryInline:
             Label("Streak - \(calculateStreakValue()) days", systemImage: "swift")
-                .widgetURL(URL(string:"streak"))
+                .widgetURL(URL(string: "streak"))
         case .systemSmall, .systemLarge, .systemExtraLarge:
             EmptyView()
         @unknown default:
             EmptyView()
         }
     }
-    
-    
-    func calculateStreakValue() -> Int{
+
+    func calculateStreakValue() -> Int {
         guard !entry.days.isEmpty else { return 0 }
-        
-        let noneFutureDays = entry.days.filter{ $0.date!.dayInt <= Date().dayInt }
-        
+
+        let noneFutureDays = entry.days.filter { $0.date!.dayInt <= Date().dayInt }
+
         var streakCount = 0
-        
+
         for day in noneFutureDays.reversed() {
-            if day.didStudy{
+            if day.didStudy {
                 streakCount += 1
-            }else{
-                if day.date!.dayInt != Date().dayInt{
+            } else {
+                if day.date!.dayInt != Date().dayInt {
                     break
                 }
             }
@@ -137,19 +130,16 @@ struct SwiftCalWidget: Widget {
     CalendarEntry(date: .now, days: [] )
 }
 
-
-
-//MARK: UI Components for different sizes
-
-private struct MediumCalendarView : View {
-    var entry : CalendarEntry
+// MARK: UI Components for different sizes
+private struct MediumCalendarView: View {
+    var entry: CalendarEntry
     let columns = Array(repeating: GridItem(.flexible()), count: 7)
     var streakValue: Int
-    
+
     var body: some View {
-        HStack{
-            Link(destination: URL(string: "streak")!){
-                VStack{
+        HStack {
+            Link(destination: URL(string: "streak")!) {
+                VStack {
                     Text("\(streakValue)")
                         .font(.system(size: 70, design: .rounded))
                         .bold()
@@ -159,12 +149,11 @@ private struct MediumCalendarView : View {
                         .foregroundStyle(.secondary)
                 }
             }
-            Link(destination: URL(string: "calendar")!){
-                VStack{
+            Link(destination: URL(string: "calendar")!) {
+                VStack {
                     CalendarHeaderView(font: .caption)
-                    
                     LazyVGrid(columns: columns, spacing: 7) {
-                        ForEach(entry.days){ day in
+                        ForEach(entry.days) { day in
                             if day.date!.monthInt != Date().monthInt {
                                 Text(" ")
                             } else {
@@ -181,7 +170,6 @@ private struct MediumCalendarView : View {
                             }
                         }
                     }
-                    
                 }
             }
             .padding(.leading)
@@ -190,24 +178,23 @@ private struct MediumCalendarView : View {
     }
 }
 
-
 private struct LockscreenCircularView: View {
     var entry: CalendarEntry
-    
-    var currentCalanderDays: Int{
-        entry.days.filter{$0.date?.monthInt == Date().monthInt}.count
+
+    var currentCalanderDays: Int {
+        entry.days.filter { $0.date?.monthInt == Date().monthInt }.count
     }
-    
-    
-    var daysStudied: Int{
-        entry.days.filter{$0.date?.monthInt == Date().monthInt}
-            .filter{$0.didStudy}.count
+
+    var daysStudied: Int {
+        entry.days.filter { $0.date?.monthInt == Date().monthInt }
+            .filter { $0.didStudy }
+            .count
     }
-    
+
     var body: some View {
         Gauge(
             value: Double(daysStudied),
-            in: 1...Double(currentCalanderDays)){
+            in: 1...Double(currentCalanderDays)) {
                 Image(systemName: "swift")
             } currentValueLabel: {
                 Text("\(daysStudied)")
@@ -216,30 +203,28 @@ private struct LockscreenCircularView: View {
     }
 }
 
-
-private struct LockScreenRectangularView : View {
-    var entry : CalendarEntry
+private struct LockScreenRectangularView: View {
+    var entry: CalendarEntry
     let columns = Array(repeating: GridItem(.flexible()), count: 7)
-    
+
     var body: some View {
         LazyVGrid(columns: columns, spacing: 4) {
-            ForEach(entry.days){ day in
+            ForEach(entry.days) { day in
                 if day.date!.monthInt != Date().monthInt {
                     Text(" ")
                         .font(.system(size: 7))
                 } else {
-                    if(day.didStudy){
+                    if day.didStudy {
                         Image(systemName: "swift")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 7, height: 7)
-                    }else{
+                    } else {
                         Text(day.date!.formatted(.dateTime.day()))
                             .font(.system(size: 7))
                             .frame(maxWidth: .infinity)
                     }
                 }
-                
             }
         }
         .padding()

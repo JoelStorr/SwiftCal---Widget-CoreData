@@ -11,7 +11,7 @@ import WidgetKit
 
 struct CalendarView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    
+
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Day.date, ascending: true)],
         predicate: NSPredicate(
@@ -20,20 +20,18 @@ struct CalendarView: View {
             Date().endOfMonth as CVarArg
         ))
     private var days: FetchedResults<Day>
-    
-    
+
     let daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"]
-    
+
     var body: some View {
         NavigationView {
-            VStack{
+            VStack {
                 CalendarHeaderView()
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7)){
-                    ForEach(days){ day in
-                        
-                        if day.date!.monthInt != Date().monthInt{
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7)) {
+                    ForEach(days) { day in
+                        if day.date!.monthInt != Date().monthInt {
                             Text(" ")
-                        }else {
+                        } else {
                             Text(day.date!.formatted(.dateTime.day()))
                                 .fontWeight(.bold)
                                 .foregroundStyle(day.didStudy ? .orange : .secondary)
@@ -45,11 +43,11 @@ struct CalendarView: View {
                                 .onTapGesture {
                                     if day.date!.dayInt <= Date().dayInt {
                                         day.didStudy.toggle()
-                                        do{
+                                        do {
                                             try viewContext.save()
                                             WidgetCenter.shared.reloadTimelines(ofKind: "SwiftCalWidget")
                                             print("👆 \(day.date!.dayInt) now studied.")
-                                        }catch {
+                                        } catch {
                                             print("Failed to save context")
                                         }
                                     } else {
@@ -63,8 +61,8 @@ struct CalendarView: View {
             }
                 .navigationTitle(Date().formatted(.dateTime.month(.wide)))
                 .padding()
-                .onAppear{
-                    if days.isEmpty{
+                .onAppear {
+                    if days.isEmpty {
                         createMonthDays(for: .now.startOfPreviousMonth)
                         createMonthDays(for: .now)
                     } else if days.count < 10 {
@@ -72,29 +70,24 @@ struct CalendarView: View {
                     }
                 }
             }
-        
     }
-    
-    func createMonthDays(for date: Date){
-        for daysOffset in 0..<date.numberOfDaysInMonth{
+
+    func createMonthDays(for date: Date) {
+        for daysOffset in 0..<date.numberOfDaysInMonth {
             let newDay = Day(context: viewContext)
             newDay.date = Calendar.current.date(byAdding: .day, value: daysOffset, to: date.startOfMonth)
             newDay.didStudy = false
         }
-        
-        do{
+
+        do {
             try viewContext.save()
             print("✅ \(date.monthFullName) days Created")
-            
-        }catch{
+        } catch {
             print("Faild to save")
         }
-        
     }
-    
-    
-    
 }
+
 #Preview {
     CalendarView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }

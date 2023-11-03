@@ -12,11 +12,11 @@ struct SwiftCalApp: App {
     let persistenceController = PersistenceController.shared
 
     @State private var selectedTab = 0
-    
+
     var body: some Scene {
         WindowGroup {
-            
-            TabView(selection: $selectedTab ){
+
+            TabView(selection: $selectedTab ) {
                 CalendarView()
                     .tabItem { Label("Calendar", systemImage: "calendar") }
                     .tag(0)
